@@ -26,6 +26,68 @@ def table_display():
                 print(' | ' + str(spot) + ' | ', end=' ')
             spot += 1
         print()
+def comp_winner():
+
+    #for checking row
+    for i in range(order):
+        row_check = ''
+        for j in range(order):
+            spot = (order * i) + j
+            row_check = row_check + str(check_list[spot])
+        if row_check == 'x' * order or row_check == 'o'*order:
+            return True
+            break
+    #for checking column
+    for i in range(order):
+        column_check = ''
+        for j in range(order):
+            spot = i + (order * j)
+            column_check = column_check + str(check_list[spot])
+        if column_check == 'x' * order or column_check == 'o' * order:
+            return True
+            break
+    #for main diagonal
+    mdiagonal_check = ''
+    for i in range(order):
+        spot = (order * i) + i
+        mdiagonal_check = mdiagonal_check + str(check_list[spot])
+
+    if mdiagonal_check == 'x' * order or mdiagonal_check == 'o' * order:
+        return True
+
+    #for second diagonal
+    sdiagonal_check = ''
+    j = order - 1
+    for i in range(order):
+        spot = (order * i) + j
+        j -= 1
+        sdiagonal_check = sdiagonal_check + str(check_list[spot])
+    if sdiagonal_check == 'x' * order or sdiagonal_check == 'o' * order:
+        return True
+
+
+def comp_move():
+    global check_list
+    a = ' '
+    check_list = spots.copy()
+    m = check_list.copy()
+    for i in empty_spots:
+        check_list[i] = 'o'
+        if comp_winner():
+            a = i
+            break
+        check_list[i] = 'x'
+        if comp_winner():
+            a = i
+            break
+        check_list = m.copy()
+    if a in empty_spots:
+        return a
+    else:
+        return random.choice(empty_spots)
+
+
+
 
 #For checking winner
 def winner():
@@ -90,7 +152,7 @@ while True:
         elif turn % 2 != 0 and comp:
             time.sleep(1)
             print()
-            spot = random.choice(empty_spots)
+            spot = comp_move()
             spots[spot] = 'o'
             empty_spots.remove(spot)
             turn += 1
